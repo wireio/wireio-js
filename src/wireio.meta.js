@@ -3,13 +3,15 @@ function Metaify(obj) {
 
   Meta.prototype.chain = function (chain_func) {
     var owner = false;
-    if (!this.owner)
+    if (!this.owner) {
       owner = {
         context: this,
         timer: null,
         stack: []
-      } else
+      } 
+		} else {
       owner = this.owner;
+		}
 
     var wrappedContext = function (func, owner) {
       this.func = func;

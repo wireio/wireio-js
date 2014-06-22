@@ -84,7 +84,7 @@ module.exports = function(grunt) {
     ]);
   grunt.registerTask('build', [
       'concat:dist',
-      'uglify:dist',
-      'concat:dev'
+      'concat:dev',
+      'uglify:dist'
     ]);
 };

@@ -119,7 +119,8 @@
       var pre_init = function () {
         // Setup the identity handler, so we can identify the connection with a unique ID
         addCallback(_events.identity, function (identity) {
-          WireIOKlass.prototype.identity = _identity = identity;
+          WireIOKlass.prototype.identity = _identity = identity.data;
+					self.trigger(_events.connected, identity.data);
           debug("<<Setting identity>>");
         });
         debug("<<Registered callback for identity>>");
@@ -174,8 +175,8 @@
 
         selected_transport.onmessage = function (m) {
           var parsed_data = JSON.parse(m.data);
-          self.trigger(parsed_data.payload.e, parsed_data.payload.data);
-          debug("<<Payload Arrived>>::<<Event>>==> " + parsed_data.payload.e);
+          self.trigger(parsed_data.event, parsed_data.payload);
+          debug("<<Payload Arrived>>::<<Event>>==> " + parsed_data.event);
         };
 
       };
@@ -238,6 +239,7 @@
     }
 
   };
+	WireIO.$ = WireIO.jQuery = jQuery.noConflict(true);
 
   var WireIOKlass = function (endpoint) {
     var gateway = new Gateway.Wire();
@@ -255,7 +257,7 @@
     return this.wrapChain().chain(function () {
       if (this.getChain().length == 1) {
         var el_event = this.getChain()[0].func();
-        $(el_event[0]).bind(el_event[1], function (ui_event) {
+        WireIO.$(el_event[0]).bind(el_event[1], function (ui_event) {
           queue({
             event: _events.fire,
             payload: {
